@@ -15,4 +15,5 @@ public interface TemplateConstant {
     String DATE = "date";
 
     String AUTHOR = "author";
+
 }

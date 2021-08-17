@@ -1,8 +1,6 @@
 package com.xiaobao.stp.mybatisplus.generator;
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
-import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
-import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 import com.xiaobao.stp.mybatisplus.convert.MysqlTypeConvertSupport;
 import com.xiaobao.stp.mybatisplus.freemarker.FreemarkerUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -29,25 +27,11 @@ public class AutoGeneratorPlus extends AutoGenerator {
         // 设置默认的 TypeConvert
         initTypeConvert();
 
-        log.debug("==========================准备生成文件...==========================");
-        // 初始化配置
-        if (null == config) {
-            config = new ConfigBuilder(getPackageInfo(), getDataSource(), getStrategy(), getTemplate(), getGlobalConfig());
-            if (null != injectionConfig) {
-                injectionConfig.setConfig(config);
-            }
-        }
+        super.execute();
 
-        if (null == getTemplateEngine()) {
-            // 为了兼容之前逻辑，采用 Velocity 引擎 【 默认 】
-            setTemplateEngine(new VelocityTemplateEngine());
-        }
-
-        // 模板引擎初始化执行文件输出
-        getTemplateEngine().init(this.pretreatmentConfigBuilder(config)).mkdirs().batchOutput().open();
+        log.debug("==========================准备生成枚举、JsonBo...==========================");
 
         MysqlTypeConvertSupport typeConvert = (MysqlTypeConvertSupport) getDataSource().getTypeConvert();
-
         String path = getGlobalConfig().getOutputDir() + "/" +
                 getPackageInfo().getParent().replaceAll("[.]", "/");
 
@@ -56,7 +40,7 @@ public class AutoGeneratorPlus extends AutoGenerator {
         // 生成相应的 bo
         FreemarkerUtils.writeFile(typeConvert.getJsonList(), path + "/bo", "jsonBo.java.ftl");
 
-        log.debug("==========================文件生成完成！！！==========================");
+        log.debug("==========================枚举、JsonBo生成完成！！！==========================");
     }
 
 }
