@@ -50,7 +50,6 @@ public class Main {
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("庞亚彬");
         gc.setOpen(false);
-        // gc.setSwagger2(true); 实体属性 Swagger2 注解
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
