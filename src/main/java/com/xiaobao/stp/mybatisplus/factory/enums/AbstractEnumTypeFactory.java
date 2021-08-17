@@ -1,11 +1,11 @@
 package com.xiaobao.stp.mybatisplus.factory.enums;
 
 import com.xiaobao.stp.mybatisplus.factory.EnumTypeFactory;
-import jdk.internal.reflect.ConstructorAccessor;
-import jdk.internal.reflect.ReflectionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import sun.reflect.ConstructorAccessor;
+import sun.reflect.ReflectionFactory;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;

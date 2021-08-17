@@ -42,6 +42,7 @@ public class Main {
 
     public static void main(String[] args) {
         // 代码生成器
+        AutoGenerator old = new AutoGenerator();
         AutoGenerator mpg = new AutoGeneratorPlus();
 
         // 全局配置
@@ -54,7 +55,7 @@ public class Main {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/sqlstudy?useSSL=false&serverTimezone=UTC");
+        dsc.setUrl("jdbc:mysql://localhost:3306/weather?useSSL=false&serverTimezone=UTC");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
