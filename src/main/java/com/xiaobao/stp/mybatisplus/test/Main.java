@@ -70,7 +70,6 @@ public class Main {
         InjectionConfig cfg = new InjectionConfig() {
             @Override
             public void initMap() {
-                // to do nothing
             }
         };
 
