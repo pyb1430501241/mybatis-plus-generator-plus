@@ -30,10 +30,7 @@ public abstract class FreemarkerUtils {
                 try {
                     Writer out = null;
 
-                    String name = map.get(TemplateConstant.ENUM_NAME);
-                    if(Objects.isNull(name)) {
-                        name = map.get(TemplateConstant.JSON_NAME);
-                    }
+                    String name = map.get(TemplateConstant.NAME);
 
                     // 先创建文件夹
                     File parent = new File(path);

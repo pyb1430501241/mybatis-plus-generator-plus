@@ -6,9 +6,7 @@ package com.xiaobao.stp.mybatisplus.constant;
  */
 public interface TemplateConstant {
 
-    String ENUM_NAME = "enumName";
-
-    String JSON_NAME = "jsonName";
+    String NAME = "name";
 
     String PACKAGE = "package";
 

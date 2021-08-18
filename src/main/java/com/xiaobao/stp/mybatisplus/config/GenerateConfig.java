@@ -7,6 +7,7 @@ import org.springframework.lang.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author 庞亚彬
@@ -18,13 +19,11 @@ public class GenerateConfig {
     /**
      * 记录需要生成的枚举类信息, 提供给代码生成器使用
      */
-    @Getter
     private List<Map<String, String>> enumList;
 
     /**
      * 记录需要生成的 Json 对应 bo 的信息, 提供给代码生成器使用
      */
-    @Getter
     private List<Map<String, String>> jsonList;
 
     private String enumSuffix;
@@ -74,6 +73,9 @@ public class GenerateConfig {
 
     public void addJsonBoConfig(@NonNull Map<String, String> jsonMap) {
         this.jsonList.add(jsonMap);
+    }
+
+    public void add(Supplier<Map<String, String>> supplier) {
     }
 
 }

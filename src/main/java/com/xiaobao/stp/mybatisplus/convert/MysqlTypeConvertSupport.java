@@ -77,13 +77,15 @@ public class MysqlTypeConvertSupport
         // 非 tinyint(1) 转为枚举
         // 枚举类名为：字段名+Enum
         if(typeName.contains("tinyint")) {
-            return getIColumnType(columnName, generateConfig.getEnumSuffix());
+            return getIColumnType(columnName, generateConfig.getEnumSuffix(),
+                    generateConfig.getEnumList(), generateConfig.getEnumPackage());
         }
 
         // json 转实体类
         // 类名为：字段名+JsonBo
         if(typeName.contains("json")) {
-            return getIColumnType(columnName, generateConfig.getJsonBoSuffix());
+            return getIColumnType(columnName, generateConfig.getJsonBoSuffix(),
+                    generateConfig.getJsonList(), generateConfig.getJsonBoPackage());
         }
 
         return processTypeConvert(globalConfig, tableField.getType());
@@ -96,7 +98,8 @@ public class MysqlTypeConvertSupport
      * @return
      *  名为：columnName + name 的枚举对象
      */
-    private IColumnType getIColumnType(String columnName, String name) {
+    private IColumnType getIColumnType(String columnName, String name,
+                                       List<Map<String, String>> mapList, String packageName) {
         //列名+相应后缀
         String useName = columnName + name;
         Map<String, String> templateMap = new HashMap<>();
@@ -104,19 +107,11 @@ public class MysqlTypeConvertSupport
 
         templateMap.put(TemplateConstant.DATE, nowDate());
         templateMap.put(TemplateConstant.AUTHOR, author);
+        templateMap.put(TemplateConstant.NAME, useName);
+        path += POINT + packageName;
+        templateMap.put(TemplateConstant.PACKAGE, path);
 
-        // 如果是枚举
-        if(generateConfig.getEnumSuffix().equals(name)) {
-            templateMap.put(TemplateConstant.ENUM_NAME, useName);
-            path += POINT + generateConfig.getEnumPackage();
-            templateMap.put(TemplateConstant.PACKAGE, path);
-            generateConfig.addEnumConfig(templateMap);
-        } else {
-            templateMap.put(TemplateConstant.JSON_NAME, useName);
-            path += POINT + generateConfig.getJsonBoPackage();
-            templateMap.put(TemplateConstant.PACKAGE, path);
-            generateConfig.addJsonBoConfig(templateMap);
-        }
+        mapList.add(templateMap);
 
         return DB_COLUMN_TYPE_FACTORY.create(useName.toUpperCase(), useName
                 , splicingString(path, POINT, useName));

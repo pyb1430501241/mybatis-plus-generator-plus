@@ -27,7 +27,7 @@ public class AutoGeneratorPlus extends AutoGenerator {
     }
 
     /**
-     * 该方案会无法使用户使用自己的 convert
+     * 必须优先设置 TypeConvert, 如果后设置可能会导致配置失效
      * 回调
      * @see #execute() 方法之前进行调用, 进行默认的 TypeConvert 配置
      */
@@ -93,13 +93,9 @@ public class AutoGeneratorPlus extends AutoGenerator {
     }
 
     private String getUsePath(String parentPath, String packageName) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(parentPath);
-        builder.append("/");
-        builder.append(packageName);
-
-        return builder.toString();
+        return parentPath +
+                "/" +
+                packageName;
     }
 
 }

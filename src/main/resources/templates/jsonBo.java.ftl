@@ -8,6 +8,6 @@ package ${package};
 * @author ${author}
 * @since ${date}
 */
-public class ${jsonName} {
+public class ${name} {
 
 }
