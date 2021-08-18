@@ -2,12 +2,10 @@ package com.xiaobao.stp.mybatisplus.config;
 
 import com.xiaobao.stp.mybatisplus.constant.GenerateConstant;
 import lombok.*;
-import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * @author 庞亚彬
@@ -65,17 +63,6 @@ public class GenerateConfig {
     public GenerateConfig() {
         this.enumList = new ArrayList<>();
         this.jsonList = new ArrayList<>();
-    }
-
-    public void addEnumConfig(@NonNull Map<String, String> enumMap) {
-        this.enumList.add(enumMap);
-    }
-
-    public void addJsonBoConfig(@NonNull Map<String, String> jsonMap) {
-        this.jsonList.add(jsonMap);
-    }
-
-    public void add(Supplier<Map<String, String>> supplier) {
     }
 
 }

@@ -12,13 +12,13 @@ import org.springframework.lang.NonNull;
 public class IColumnTypeFactory extends AbstractEnumTypeFactory<DbColumnType> {
 
     @Override
-    public DbColumnType apply(Class<?> targetClass) {
+    public DbColumnType apply(@NonNull Class<?> targetClass) {
         return create(targetClass.getSimpleName().toUpperCase()
                 , targetClass.getSimpleName(), targetClass.getName());
     }
 
     @Override
-    public DbColumnType create(String enumName, Object ... args) {
+    public DbColumnType create(@NonNull String enumName, Object ... args) {
         return getEnumByClass(DbColumnType.class, enumName, args);
     }
 

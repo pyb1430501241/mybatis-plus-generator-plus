@@ -1,12 +1,12 @@
 package com.xiaobao.stp.mybatisplus.generator;
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.google.common.base.CaseFormat;
 import com.xiaobao.stp.mybatisplus.config.GenerateConfig;
 import com.xiaobao.stp.mybatisplus.convert.MysqlTypeConvertSupport;
 import com.xiaobao.stp.mybatisplus.freemarker.FreemarkerUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 
@@ -39,17 +39,19 @@ public class AutoGeneratorPlus extends AutoGenerator {
 
     /**
      * 设置枚举类型生成时后缀
-     * @param suffix 后缀名, 首字母要大写
+     * @param suffix 后缀名, 会自动转驼峰
      */
     public void setEnumSuffix(@NonNull String suffix) {
+        suffix = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, suffix);
         this.mysqlTypeConvertSupport.getGenerateConfig().setEnumSuffix(suffix.trim());
     }
 
     /**
      * 设置 jsonBo 生成时的后缀
-     * @param suffix 后缀名, 首字母大写
+     * @param suffix 后缀名, 会自动转驼峰
      */
     public void setJsonBoSuffix(@NonNull String suffix) {
+        suffix = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, suffix);
         this.mysqlTypeConvertSupport.getGenerateConfig().setJsonBoSuffix(suffix.trim());
     }
 
@@ -58,7 +60,7 @@ public class AutoGeneratorPlus extends AutoGenerator {
      * @param enumPackage 枚举包名, 不要带 `.`
      */
     public void setEnumPackage(@NonNull String enumPackage) {
-        this.mysqlTypeConvertSupport.getGenerateConfig().setEnumPackage(enumPackage.trim());
+        this.mysqlTypeConvertSupport.getGenerateConfig().setEnumPackage(enumPackage.trim().toLowerCase());
     }
 
     /**
@@ -66,7 +68,7 @@ public class AutoGeneratorPlus extends AutoGenerator {
      * @param jsonBoPackage jsonBo 包名, 不要带 `.`
      */
     public void setJsonBoPackage(@NonNull String jsonBoPackage) {
-        this.mysqlTypeConvertSupport.getGenerateConfig().setJsonBoPackage(jsonBoPackage.trim());
+        this.mysqlTypeConvertSupport.getGenerateConfig().setJsonBoPackage(jsonBoPackage.trim().toLowerCase());
     }
 
     @Override

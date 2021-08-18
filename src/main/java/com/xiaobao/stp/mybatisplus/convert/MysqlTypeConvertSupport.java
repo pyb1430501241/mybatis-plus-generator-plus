@@ -13,6 +13,7 @@ import com.xiaobao.stp.mybatisplus.factory.enums.IColumnTypeFactory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -30,6 +31,9 @@ import java.util.stream.Stream;
 public class MysqlTypeConvertSupport
         extends MySqlTypeConvert implements ITypeConvert {
 
+    /**
+     * 类型映射生成工厂
+     */
     private static final IColumnTypeFactory I_COLUMN_TYPE_FACTORY = new IColumnTypeFactory();
 
     /**
@@ -49,12 +53,6 @@ public class MysqlTypeConvertSupport
     @Setter
     private String author;
 
-    public MysqlTypeConvertSupport(String parentName, String author) {
-        this.author = author;
-        this.parentName = parentName;
-        this.generateConfig = new GenerateConfig();
-    }
-
     @Override
     public IColumnType processTypeConvert(GlobalConfig globalConfig, TableField tableField) {
         String typeName = tableField.getType().toLowerCase();
@@ -72,14 +70,12 @@ public class MysqlTypeConvertSupport
         columnName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, columnName);
 
         // 非 tinyint(1) 转为枚举
-        // 枚举类名为：字段名+Enum
         if(typeName.contains("tinyint")) {
             return getIColumnType(columnName, generateConfig.getEnumSuffix(),
                     generateConfig.getEnumList(), generateConfig.getEnumPackage());
         }
 
         // json 转实体类
-        // 类名为：字段名+JsonBo
         if(typeName.contains("json")) {
             return getIColumnType(columnName, generateConfig.getJsonBoSuffix(),
                     generateConfig.getJsonList(), generateConfig.getJsonBoPackage());
@@ -92,32 +88,34 @@ public class MysqlTypeConvertSupport
      * 通过表列名和后缀生成一个 IColumnType
      * @param columnName 列名
      * @param name 后缀
-     * @param mapList 生成的代码的必要信息储存
+     * @param targetList 生成的代码的必要信息储存
      * @param packageName 生成代码的包名
      * @return
-     *  名为：columnName + name 的枚举对象
+     *  IColumnType
      */
-    private IColumnType getIColumnType(String columnName, String name,
-                                       List<Map<String, String>> mapList, String packageName) {
+    @NonNull
+    private IColumnType getIColumnType(@NonNull String columnName, @NonNull String name,
+                                       @NonNull List<Map<String, String>> targetList, @NonNull String packageName) {
         //列名+相应后缀
         String useName = columnName + name;
-        String path = splicingString(parentName, POINT, packageName);
+        // 包全路径
+        String packagePath = splicingString(parentName, POINT, packageName);
 
         // 添加生成目标信息
-        addGeneratorTargetInfo(useName, path, mapList);
+        addGeneratorTargetInfo(useName, packagePath, targetList);
 
-        return I_COLUMN_TYPE_FACTORY.create(useName, splicingString(path, POINT, useName));
+        return I_COLUMN_TYPE_FACTORY.create(useName, splicingString(packagePath, POINT, useName));
     }
 
     /**
      * 添加需要生成的类的信息
      * @param typeName 类名
-     * @param path 类的路径
-     * @param mapList 使用什么生成
+     * @param path 包的路径
+     * @param targetList 生成什么类型
      * @see com.xiaobao.stp.mybatisplus.config.GenerateConfig#getEnumList()
      * @see com.xiaobao.stp.mybatisplus.config.GenerateConfig#getJsonList()
      */
-    private void addGeneratorTargetInfo(String typeName, String path, List<Map<String, String>> mapList) {
+    private void addGeneratorTargetInfo(@NonNull String typeName, @NonNull String path, List<Map<String, String>> targetList) {
         Map<String, String> templateMap = new HashMap<>();
 
         templateMap.put(TemplateConstant.DATE, nowDate());
@@ -125,15 +123,17 @@ public class MysqlTypeConvertSupport
         templateMap.put(TemplateConstant.NAME, typeName);
         templateMap.put(TemplateConstant.PACKAGE, path);
 
-        mapList.add(templateMap);
+        targetList.add(templateMap);
     }
 
+    @NonNull
     private static String splicingString(String ... args) {
         StringBuilder builder = new StringBuilder();
         Stream.of(args).forEach(builder :: append);
         return builder.toString();
     }
 
+    @NonNull
     private static String nowDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(new Date());
