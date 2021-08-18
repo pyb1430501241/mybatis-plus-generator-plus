@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.google.common.base.CaseFormat;
 import com.xiaobao.stp.mybatisplus.config.GenerateConfig;
 import com.xiaobao.stp.mybatisplus.constant.TemplateConstant;
-import com.xiaobao.stp.mybatisplus.factory.enums.DbColumnTypeFactory;
+import com.xiaobao.stp.mybatisplus.factory.enums.IColumnTypeFactory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,10 +30,7 @@ import java.util.stream.Stream;
 public class MysqlTypeConvertSupport
         extends MySqlTypeConvert implements ITypeConvert {
 
-    /**
-     * 类型映射工厂
-     */
-    private static final DbColumnTypeFactory DB_COLUMN_TYPE_FACTORY = new DbColumnTypeFactory();
+    private static final IColumnTypeFactory I_COLUMN_TYPE_FACTORY = new IColumnTypeFactory();
 
     /**
      * .
@@ -95,6 +92,8 @@ public class MysqlTypeConvertSupport
      * 通过表列名和后缀生成一个 IColumnType
      * @param columnName 列名
      * @param name 后缀
+     * @param mapList 生成的代码的必要信息储存
+     * @param packageName 生成代码的包名
      * @return
      *  名为：columnName + name 的枚举对象
      */
@@ -102,19 +101,31 @@ public class MysqlTypeConvertSupport
                                        List<Map<String, String>> mapList, String packageName) {
         //列名+相应后缀
         String useName = columnName + name;
+        String path = splicingString(parentName, POINT, packageName);
+
+        // 添加生成目标信息
+        addGeneratorTargetInfo(useName, path, mapList);
+
+        return I_COLUMN_TYPE_FACTORY.create(useName, splicingString(path, POINT, useName));
+    }
+
+    /**
+     * 添加需要生成的类的信息
+     * @param typeName 类名
+     * @param path 类的路径
+     * @param mapList 使用什么生成
+     * @see com.xiaobao.stp.mybatisplus.config.GenerateConfig#getEnumList()
+     * @see com.xiaobao.stp.mybatisplus.config.GenerateConfig#getJsonList()
+     */
+    private void addGeneratorTargetInfo(String typeName, String path, List<Map<String, String>> mapList) {
         Map<String, String> templateMap = new HashMap<>();
-        String path = parentName;
 
         templateMap.put(TemplateConstant.DATE, nowDate());
         templateMap.put(TemplateConstant.AUTHOR, author);
-        templateMap.put(TemplateConstant.NAME, useName);
-        path += POINT + packageName;
+        templateMap.put(TemplateConstant.NAME, typeName);
         templateMap.put(TemplateConstant.PACKAGE, path);
 
         mapList.add(templateMap);
-
-        return DB_COLUMN_TYPE_FACTORY.create(useName.toUpperCase(), useName
-                , splicingString(path, POINT, useName));
     }
 
     private static String splicingString(String ... args) {
