@@ -7,9 +7,12 @@ import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.google.common.base.CaseFormat;
+import com.xiaobao.stp.mybatisplus.config.GenerateConfig;
 import com.xiaobao.stp.mybatisplus.constant.TemplateConstant;
 import com.xiaobao.stp.mybatisplus.factory.enums.DbColumnTypeFactory;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,6 +26,7 @@ import java.util.stream.Stream;
  * @author 庞亚彬
  * @since 2021-08-17 13:51
  */
+@NoArgsConstructor
 public class MysqlTypeConvertSupport
         extends MySqlTypeConvert implements ITypeConvert {
 
@@ -36,41 +40,22 @@ public class MysqlTypeConvertSupport
      */
     private static final String POINT = ".";
 
-    /**
-     * 枚举后缀
-     */
-    private static final String ENUM = "Enum";
-
-    /**
-     * JsonBo 后缀
-     */
-    private static final String JSON_BO = "JsonBo";
-
-    /**
-     * 不应该记录在这里
-     * 记录需要生成的枚举类信息, 提供给代码生成器使用
-     */
     @Getter
-    private List<Map<String, String>> enumList;
-
-    /**
-     * 不应该记录在这里
-     * 记录需要生成的 Json 对应 bo 的信息, 提供给代码生成器使用
-     */
-    @Getter
-    private List<Map<String, String>> jsonList;
+    @Setter
+    private GenerateConfig generateConfig;
 
     // 父包名
+    @Setter
     private String parentName;
 
     // 作者名
+    @Setter
     private String author;
 
     public MysqlTypeConvertSupport(String parentName, String author) {
         this.author = author;
         this.parentName = parentName;
-        this.enumList = new ArrayList<>();
-        this.jsonList = new ArrayList<>();
+        this.generateConfig = new GenerateConfig();
     }
 
     @Override
@@ -92,13 +77,13 @@ public class MysqlTypeConvertSupport
         // 非 tinyint(1) 转为枚举
         // 枚举类名为：字段名+Enum
         if(typeName.contains("tinyint")) {
-            return getIColumnType(columnName, ENUM);
+            return getIColumnType(columnName, generateConfig.getEnumSuffix());
         }
 
         // json 转实体类
         // 类名为：字段名+JsonBo
         if(typeName.contains("json")) {
-            return getIColumnType(columnName, JSON_BO);
+            return getIColumnType(columnName, generateConfig.getJsonBoSuffix());
         }
 
         return processTypeConvert(globalConfig, tableField.getType());
@@ -121,16 +106,16 @@ public class MysqlTypeConvertSupport
         templateMap.put(TemplateConstant.AUTHOR, author);
 
         // 如果是枚举
-        if(ENUM.equals(name)) {
+        if(generateConfig.getEnumSuffix().equals(name)) {
             templateMap.put(TemplateConstant.ENUM_NAME, useName);
-            path += ".enums";
+            path += POINT + generateConfig.getEnumPackage();
             templateMap.put(TemplateConstant.PACKAGE, path);
-            enumList.add(templateMap);
+            generateConfig.addEnumConfig(templateMap);
         } else {
             templateMap.put(TemplateConstant.JSON_NAME, useName);
-            path += ".bo";
+            path += POINT + generateConfig.getJsonBoPackage();
             templateMap.put(TemplateConstant.PACKAGE, path);
-            jsonList.add(templateMap);
+            generateConfig.addJsonBoConfig(templateMap);
         }
 
         return DB_COLUMN_TYPE_FACTORY.create(useName.toUpperCase(), useName

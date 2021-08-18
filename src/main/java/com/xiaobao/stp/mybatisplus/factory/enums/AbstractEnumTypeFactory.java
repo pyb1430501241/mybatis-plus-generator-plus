@@ -103,7 +103,7 @@ public abstract class AbstractEnumTypeFactory<T extends Enum<?>>
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    protected T getEnumByClass(@NonNull Class<T> clazz, @NonNull String enumName, Object ... args) {
+    public T getEnumByClass(@NonNull Class<T> clazz, @NonNull String enumName, Object ... args) {
         if(!clazz.isEnum()) {
             throw new RuntimeException("该类型不是枚举类型");
         }
