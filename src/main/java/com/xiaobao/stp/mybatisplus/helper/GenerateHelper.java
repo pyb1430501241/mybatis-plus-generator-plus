@@ -13,7 +13,7 @@ import java.util.Map;
  * @since 2021-08-18 9:38
  */
 @Data
-public class GenerateHelper {
+public class GenerateHelper implements Generate {
 
     /**
      * 记录需要生成的枚举类信息, 提供给代码生成器使用

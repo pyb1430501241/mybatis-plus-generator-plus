@@ -2,6 +2,7 @@ package com.xiaobao.stp.mybatisplus.generator;
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.google.common.base.CaseFormat;
+import com.xiaobao.stp.mybatisplus.helper.Generate;
 import com.xiaobao.stp.mybatisplus.helper.GenerateHelper;
 import com.xiaobao.stp.mybatisplus.convert.MysqlTypeConvertSupport;
 import lombok.Data;
@@ -16,7 +17,7 @@ import org.springframework.lang.NonNull;
 @EqualsAndHashCode(callSuper = true)
 @Slf4j
 @Data
-public class AutoGeneratorPlus extends AutoGenerator {
+public class AutoGeneratorPlus extends AutoGenerator implements Generate {
 
     private MysqlTypeConvertSupport mysqlTypeConvertSupport;
 
