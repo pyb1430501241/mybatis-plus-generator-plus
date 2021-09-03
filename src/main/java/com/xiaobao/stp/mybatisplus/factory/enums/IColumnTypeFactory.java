@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
  * @since 2021-08-16 13:07
  * <p>仅适用于 jdk1.8</p>
  */
-public class IColumnTypeFactory extends AbstractEnumTypeFactory<DbColumnType> {
+public class IColumnTypeFactory extends AbstractEnumTypeFactory<IColumnType, DbColumnType> {
 
     @Override
     public DbColumnType apply(@NonNull Class<?> targetClass) {

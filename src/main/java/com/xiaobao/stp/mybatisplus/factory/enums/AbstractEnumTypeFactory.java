@@ -22,8 +22,8 @@ import java.util.Objects;
  * @since 2021-08-16 13:05
  */
 @Slf4j
-public abstract class AbstractEnumTypeFactory<T extends Enum<?>>
-        implements EnumTypeFactory<T> {
+public abstract class AbstractEnumTypeFactory<E, T extends Enum<?>>
+        implements EnumTypeFactory<E, T> {
 
     /**
      * 该类及其不安全, 在 1.8 版本中提供给外部使用, 更高版本 jdk 中不对外使用, 需添加
@@ -103,7 +103,7 @@ public abstract class AbstractEnumTypeFactory<T extends Enum<?>>
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    public T getEnumByClass(@NonNull Class<T> clazz, @NonNull String enumName, Object ... args) {
+    protected T getEnumByClass(@NonNull Class<T> clazz, @NonNull String enumName, Object ... args) {
         if(!clazz.isEnum()) {
             throw new RuntimeException("该类型不是枚举类型");
         }
