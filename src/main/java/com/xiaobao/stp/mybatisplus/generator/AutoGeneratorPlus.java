@@ -2,9 +2,8 @@ package com.xiaobao.stp.mybatisplus.generator;
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.google.common.base.CaseFormat;
-import com.xiaobao.stp.mybatisplus.config.GenerateConfig;
+import com.xiaobao.stp.mybatisplus.helper.GenerateHelper;
 import com.xiaobao.stp.mybatisplus.convert.MysqlTypeConvertSupport;
-import com.xiaobao.stp.mybatisplus.freemarker.FreemarkerUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ public class AutoGeneratorPlus extends AutoGenerator {
 
     public AutoGeneratorPlus() {
         this.mysqlTypeConvertSupport = new MysqlTypeConvertSupport();
-        this.mysqlTypeConvertSupport.setGenerateConfig(new GenerateConfig());
+        this.mysqlTypeConvertSupport.setGenerateHelper(new GenerateHelper());
     }
 
     /**
@@ -43,7 +42,7 @@ public class AutoGeneratorPlus extends AutoGenerator {
      */
     public void setEnumSuffix(@NonNull String suffix) {
         suffix = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, suffix);
-        this.mysqlTypeConvertSupport.getGenerateConfig().setEnumSuffix(suffix.trim());
+        this.mysqlTypeConvertSupport.getGenerateHelper().setEnumSuffix(suffix.trim());
     }
 
     /**
@@ -52,7 +51,7 @@ public class AutoGeneratorPlus extends AutoGenerator {
      */
     public void setJsonBoSuffix(@NonNull String suffix) {
         suffix = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, suffix);
-        this.mysqlTypeConvertSupport.getGenerateConfig().setJsonBoSuffix(suffix.trim());
+        this.mysqlTypeConvertSupport.getGenerateHelper().setJsonBoSuffix(suffix.trim());
     }
 
     /**
@@ -60,7 +59,7 @@ public class AutoGeneratorPlus extends AutoGenerator {
      * @param enumPackage 枚举包名, 不要带 `.`
      */
     public void setEnumPackage(@NonNull String enumPackage) {
-        this.mysqlTypeConvertSupport.getGenerateConfig().setEnumPackage(enumPackage.trim().toLowerCase());
+        this.mysqlTypeConvertSupport.getGenerateHelper().setEnumPackage(enumPackage.trim().toLowerCase());
     }
 
     /**
@@ -68,7 +67,7 @@ public class AutoGeneratorPlus extends AutoGenerator {
      * @param jsonBoPackage jsonBo 包名, 不要带 `.`
      */
     public void setJsonBoPackage(@NonNull String jsonBoPackage) {
-        this.mysqlTypeConvertSupport.getGenerateConfig().setJsonBoPackage(jsonBoPackage.trim().toLowerCase());
+        this.mysqlTypeConvertSupport.getGenerateHelper().setJsonBoPackage(jsonBoPackage.trim().toLowerCase());
     }
 
     @Override
@@ -84,20 +83,9 @@ public class AutoGeneratorPlus extends AutoGenerator {
         String path = getGlobalConfig().getOutputDir() + "/" +
                 getPackageInfo().getParent().replaceAll("[.]", "/");
 
-        // 生成相应的枚举
-        FreemarkerUtils.writeFile(typeConvert.getGenerateConfig().getEnumList(),
-                getUsePath(path, mysqlTypeConvertSupport.getGenerateConfig().getEnumPackage()), "enum.java.ftl");
-        // 生成相应的 bo
-        FreemarkerUtils.writeFile(typeConvert.getGenerateConfig().getJsonList(),
-                getUsePath(path, mysqlTypeConvertSupport.getGenerateConfig().getJsonBoPackage()), "jsonBo.java.ftl");
+        typeConvert.getGenerateHelper().batchOutput(path);
 
         log.debug("==========================枚举、JsonBo生成完成！！！==========================");
-    }
-
-    private String getUsePath(String parentPath, String packageName) {
-        return parentPath +
-                "/" +
-                packageName;
     }
 
 }

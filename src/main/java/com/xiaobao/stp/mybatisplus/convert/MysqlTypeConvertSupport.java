@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.google.common.base.CaseFormat;
-import com.xiaobao.stp.mybatisplus.config.GenerateConfig;
+import com.xiaobao.stp.mybatisplus.helper.GenerateHelper;
 import com.xiaobao.stp.mybatisplus.constant.TemplateConstant;
 import com.xiaobao.stp.mybatisplus.factory.enums.IColumnTypeFactory;
 import lombok.Getter;
@@ -43,7 +43,7 @@ public class MysqlTypeConvertSupport
 
     @Getter
     @Setter
-    private GenerateConfig generateConfig;
+    private GenerateHelper generateHelper;
 
     // 父包名
     @Setter
@@ -71,14 +71,14 @@ public class MysqlTypeConvertSupport
 
         // 非 tinyint(1) 转为枚举
         if(typeName.contains("tinyint")) {
-            return getIColumnType(columnName, generateConfig.getEnumSuffix(),
-                    generateConfig.getEnumList(), generateConfig.getEnumPackage());
+            return getIColumnType(columnName, generateHelper.getEnumSuffix(),
+                    generateHelper.getEnumList(), generateHelper.getEnumPackage());
         }
 
         // json 转实体类
         if(typeName.contains("json")) {
-            return getIColumnType(columnName, generateConfig.getJsonBoSuffix(),
-                    generateConfig.getJsonList(), generateConfig.getJsonBoPackage());
+            return getIColumnType(columnName, generateHelper.getJsonBoSuffix(),
+                    generateHelper.getJsonList(), generateHelper.getJsonBoPackage());
         }
 
         return processTypeConvert(globalConfig, tableField.getType());
@@ -112,8 +112,8 @@ public class MysqlTypeConvertSupport
      * @param typeName 类名
      * @param path 包的路径
      * @param targetList 生成什么类型
-     * @see com.xiaobao.stp.mybatisplus.config.GenerateConfig#getEnumList()
-     * @see com.xiaobao.stp.mybatisplus.config.GenerateConfig#getJsonList()
+     * @see com.xiaobao.stp.mybatisplus.helper.GenerateHelper#getEnumList()
+     * @see com.xiaobao.stp.mybatisplus.helper.GenerateHelper#getJsonList()
      */
     private void addGeneratorTargetInfo(@NonNull String typeName, @NonNull String path, List<Map<String, String>> targetList) {
         Map<String, String> templateMap = new HashMap<>();

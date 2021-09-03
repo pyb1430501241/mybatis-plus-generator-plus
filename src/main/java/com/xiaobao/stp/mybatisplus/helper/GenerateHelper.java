@@ -1,6 +1,7 @@
-package com.xiaobao.stp.mybatisplus.config;
+package com.xiaobao.stp.mybatisplus.helper;
 
 import com.xiaobao.stp.mybatisplus.constant.GenerateConstant;
+import com.xiaobao.stp.mybatisplus.freemarker.FreemarkerUtils;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @since 2021-08-18 9:38
  */
 @Data
-public class GenerateConfig {
+public class GenerateHelper {
 
     /**
      * 记录需要生成的枚举类信息, 提供给代码生成器使用
@@ -60,9 +61,24 @@ public class GenerateConfig {
         return jsonBoPackage;
     }
 
-    public GenerateConfig() {
+    public GenerateHelper() {
         this.enumList = new ArrayList<>();
         this.jsonList = new ArrayList<>();
+    }
+
+    public void batchOutput(String path) {
+        // 生成相应的枚举
+        FreemarkerUtils.writeFile(this.getEnumList(),
+                getUsePath(path, this.getEnumPackage()), "enum.java.ftl");
+        // 生成相应的 bo
+        FreemarkerUtils.writeFile(this.getJsonList(),
+                getUsePath(path, this.getJsonBoPackage()), "jsonBo.java.ftl");
+    }
+
+    private String getUsePath(String parentPath, String packageName) {
+        return parentPath +
+                "/" +
+                packageName;
     }
 
 }
